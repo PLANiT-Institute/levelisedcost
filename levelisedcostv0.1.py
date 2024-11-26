@@ -52,7 +52,7 @@ for idx, row in wcapex_df.iterrows():
 
 
 # Create a DataFrame to store grid LCOE calculations
-gridlcoe_df = pd.DataFrame({'grid': (lcoe_df * generation_df).sum(axis=1) / generation_df.sum(axis=1)})
+gridlcoe_df = pd.DataFrame({'grid': (lcoe_df * generation_df).sum(axis=1, skipna=True) / generation_df.sum(axis=1, skipna=True),})
 
 # Prepare the DataFrame for levelized cost of hydrogen (LCOH) calculations
 slcoe_df = pd.concat([gridlcoe_df, lcoe_df[['solar', 'wind']]], axis=1)
@@ -85,4 +85,8 @@ for idx, row in slcoe_df.iterrows():
 
 lcoh_df['planned'] = altfuelcost_df['hydrogen']
 
-_utils.plot_levelisedcost(lcoh_df)
+# _utils.plot_levelisedcost(lcoe_df[['nuclear', 'coal', 'gas', 'solar', 'wind']], figsize=(10, 9))
+# _utils.plot_levelisedcost(lcoh_df, figsize = (7, 10))
+
+lcoe_df.to_csv('lcoe.csv', index=False)
+lcoh_df.to_csv('lcoh.csv', index=False)

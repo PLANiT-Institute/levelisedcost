@@ -257,98 +257,9 @@ def calculate_lcoh(capex_per_kw, fixed_opex_per_kw, efficiency, electricity_cost
 
     return lcoh.round(2)
 
-# def calculate_lcoe(generation, capex, fixedopex, fuel, d, r, T):
-#     """
-#     Calculate the Levelized Cost of Electricity (LCOE).
-#
-#     Parameters:
-#     CAPEX (float): Capital Expenditure
-#     OPEX (float): Operational Expenditure (annual)
-#     LE (float): Land Expenditure (annual)
-#     Tax (float): Tax Payment (annual)
-#     Q (float): Annual energy production
-#     d (float): Degradation rate
-#     r (float): Discount rate
-#     T (int): Economic lifetime
-#
-#     Returns:
-#     float: Calculated LCOE
-#     """
-#
-#     numerator = capex
-#     for t in range(1, T + 1):
-#         numerator += ((fixedopex / (1 + r) ** t) +
-#                       (fuel / (1 + r) ** t))
-#
-#     denominator = 0
-#     for t in range(1, T + 1):
-#         denominator += (generation * (1 - d) ** t) / (1 + r) ** t
-#
-#     LCOE = numerator / denominator
-#     return LCOE
-
-#
-# def calculate_lcoh(CAPEX, fixedopex, efficiency, eleccost, Q, cf, d, r, T):
-#     """
-#     Calculate the Levelized Cost of Hydrogen (LCOH).
-#
-#     Parameters:
-#     CAPEX (float): Capital Expenditure per unit capacity (currency per kW).
-#     fixedopex (float): Fixed operational expenditure per unit capacity per year (currency per kW.year).
-#     efficiency (float): Electricity consumption per kg of hydrogen produced (kWh/kg H₂).
-#     eleccost (float): Cost of electricity per kWh.
-#     capacity (float): System capacity in kW.
-#     cf (float): Capacity factor (as a decimal, e.g., 0.9 for 90%).
-#     d (float): Degradation rate (as a decimal per year).
-#     r (float): Discount rate (as a decimal).
-#     T (int): Economic lifetime in years.
-#
-#     Returns:
-#     float: Calculated LCOH in currency per kg of hydrogen.
-#     """
-#
-#     numerator = CAPEX  # Total CAPEX (currency)
-#
-#     denominator = 0  # Total discounted hydrogen production (kg)
-#
-#     for t in range(1, T + 1):
-#         # Discount factor
-#         discount_factor = (1 + r) ** t
-#
-#         # Degradation factor
-#         degradation_factor = (1 - d) ** (t - 1)
-#
-#         # Adjusted annual energy production due to degradation
-#         e = Q * degradation_factor  # kWh/year
-#
-#         # Annual hydrogen production (kg/year)
-#         h2prod = e / efficiency  # kg/year
-#
-#         # Discounted hydrogen production
-#         h2discounted = h2prod / discount_factor
-#         denominator += h2discounted
-#
-#         # Annual electricity cost (currency/year)
-#         eleccostyr = e * eleccost
-#
-#         # Total annual cost
-#         annual_cost = fixedopex + eleccostyr
-#
-#         # Discounted annual cost
-#         discounted_annual_cost = annual_cost / discount_factor
-#
-#         # Add to numerator
-#         numerator += discounted_annual_cost
-#
-#     # Calculate LCOH
-#     LCOH = numerator / denominator
-#
-#     return LCOH
-
-
 import matplotlib.pyplot as plt
 
-def plot_levelisedcost(df, title='Levelised Cost Over Years by Technology'):
+def plot_levelisedcost(df, figsize=(10, 6), loc = 'best', title='Levelised Cost Over Years by Technology'):
     """
     Plots the LCOH values over years for different technologies.
 
@@ -360,6 +271,9 @@ def plot_levelisedcost(df, title='Levelised Cost Over Years by Technology'):
     Returns:
     - None: Displays the plot.
     """
+    # Create a figure with the specified size
+    plt.figure(figsize=figsize)
+
     # Reset index to get 'Year' as a column
     df_reset = df.reset_index()
 
@@ -382,10 +296,10 @@ def plot_levelisedcost(df, title='Levelised Cost Over Years by Technology'):
     plt.title(title)
 
     # Add a legend outside the top-right corner
-    plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
+    plt.legend(loc=loc)
 
     # Show the plot with tight layout
-    plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust layout to make space for legend
+    # plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust layout to make space for legend
     plt.show()
 
 def forecast_series(series, forecast_years):

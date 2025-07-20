@@ -21,6 +21,7 @@ altfuelcost_df = data_dt['altfuelcost']                             # krw/kg-fue
 fuelemission_df = data_dt['fuelemission'].round(2)                  # kg-co2/kWh
 landcost_df = data_dt['landcost'].round(0)                          # krw / kW
 lifespan_df = data_dt['lifespan'].round(0)
+economic_lifespan_df = data_dt['economic_lifespan'].round(0)
 
 electrolysis_df = data_dt['electrolyser'].round(2)                  # kwh/kgh2, krw/kw, krw/kw.yea
 discount_rate = (data_dt['assumption'].loc['discount_rate'].values[0]/100).round(3) # percentage
@@ -46,7 +47,7 @@ for idx, row in wcapex_df.iterrows():
         variable_opex = fuel_df.loc[idx, col]           # in krw / kWh (fuel cost per MWh equivalent)
         land_cost_per_mw = landcost_df.loc[idx, col]    # in krw / kW per year
         lifespan = int(lifespan_df.loc[idx, col])       # in years
-        # Call the updated LCOE calculation function from _utils with the extracted parameters
+        # Use traditional LCOE calculation (CAPEX over full operational lifespan)
         lcoe_df.loc[idx, col] = _utils.calculate_lcoe(capacity, generation, capex_per_mw, fixed_opex_per_mw, variable_opex,
                    land_cost_per_mw, lifespan, discount_rate)
 

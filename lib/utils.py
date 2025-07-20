@@ -99,7 +99,8 @@ def load_excel(filepath, start_year, end_year):
         # Convert the index to integers and filter by year range if applicable
         if data.index.name == 'year':
             data.index = data.index.astype(int)
-            data = data.loc[start_year:end_year]
+            if start_year is not None and end_year is not None:
+                data = data.loc[start_year:end_year]
 
         # Convert the DataFrame columns to numeric types
         data = data.apply(pd.to_numeric, errors='coerce')
@@ -135,7 +136,7 @@ def dualfuel_generation(df1, df2):
     return result_df
 
 def calculate_lcoe_with_economic_lifespan(capacity, generation, capex_per_mw, fixed_opex_per_mw, variable_opex,
-                   land_cost_per_mw, lifespan, economic_lifespan, discount_rate, degradation=0, interest_rate=0, tax_rate=0):
+                   land_cost_per_mw, lifespan, economic_lifespan, discount_rate, degradation=None, interest_rate=None, tax_rate=None):
     """
     Calculate the Levelized Cost of Energy (LCOE) with separate economic lifespan for CAPEX distribution.
 
@@ -156,6 +157,14 @@ def calculate_lcoe_with_economic_lifespan(capacity, generation, capex_per_mw, fi
     Returns:
     - lcoe (float): Levelized Cost of Energy in USD per MWh.
     """
+    # Set default values if not provided
+    if degradation is None:
+        degradation = 0
+    if interest_rate is None:
+        interest_rate = 0
+    if tax_rate is None:
+        tax_rate = 0
+    
     # Calculate total CAPEX with interest
     capex = capex_per_mw * capacity
     capex_with_interest = capex * (1 + interest_rate)
@@ -202,7 +211,7 @@ def calculate_lcoe_with_economic_lifespan(capacity, generation, capex_per_mw, fi
     return lcoe.round(2)
 
 def calculate_lcoe(capacity, generation, capex_per_mw, fixed_opex_per_mw, variable_opex,
-                   land_cost_per_mw, lifespan, discount_rate, degradation=0, interest_rate=0, tax_rate=0):
+                   land_cost_per_mw, lifespan, discount_rate, degradation=None, interest_rate=None, tax_rate=None):
     """
     Calculate the Levelized Cost of Energy (LCOE) with degradation.
 
@@ -222,6 +231,14 @@ def calculate_lcoe(capacity, generation, capex_per_mw, fixed_opex_per_mw, variab
     Returns:
     - lcoe (float): Levelized Cost of Energy in USD per MWh.
     """
+    # Set default values if not provided
+    if degradation is None:
+        degradation = 0
+    if interest_rate is None:
+        interest_rate = 0
+    if tax_rate is None:
+        tax_rate = 0
+    
     # Calculate total CAPEX with interest
     capex = capex_per_mw * capacity
     capex_with_interest = capex * (1 + interest_rate)
